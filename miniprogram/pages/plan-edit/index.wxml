@@ -1,0 +1,50 @@
+<view class="page plan-edit-page">
+  <view wx:if="{{loading}}" class="loading">正在准备计划…</view>
+  <block wx:else>
+    <text class="eyebrow">PLAN BUILDER</text>
+    <text class="page-title">{{id ? '修改采购计划' : '新建采购计划'}}</text>
+    <view class="callout">计划按周填报，提交后先由邦邦核对，再由三磊确认备货。审核中可撤回修改。</view>
+    <view class="card form-card">
+      <label class="field">
+        <text class="field-label">计划月份</text>
+        <picker mode="date" fields="month" value="{{planMonth}}" bindchange="monthChange"><view class="picker-box">{{planMonth}} <text>›</text></view></picker>
+      </label>
+      <label class="field">
+        <text class="field-label">计划说明</text>
+        <textarea class="field-textarea" placeholder="例如车型方向、备货节奏说明（选填）" value="{{note}}" bindinput="noteInput"></textarea>
+      </label>
+    </view>
+    <view class="card form-card">
+      <text class="card-title">添加计划产品</text>
+      <label class="field">
+        <text class="field-label">产品</text>
+        <picker mode="selector" range="{{productNames}}" value="{{productIndex}}" bindchange="selectProduct"><view class="picker-box">{{productNames[productIndex] || '暂无可用产品'}} <text>›</text></view></picker>
+      </label>
+      <view class="form-row">
+        <label class="field half">
+          <text class="field-label">计划周</text>
+          <picker mode="selector" range="{{weekOptions}}" value="{{weekIndex}}" bindchange="selectWeek"><view class="picker-box">{{weekOptions[weekIndex]}} <text>›</text></view></picker>
+        </label>
+        <label class="field half">
+          <text class="field-label">数量</text>
+          <input class="field-input" type="number" value="{{quantity}}" bindinput="quantityInput"/>
+        </label>
+      </view>
+      <text class="field-hint" wx:if="{{products.length}}">最小包装：{{products[productIndex].minPackage}} 件</text>
+      <button class="btn btn-ghost add-line-btn" bindtap="addLine">+ 加入计划</button>
+    </view>
+    <view class="card form-card">
+      <view class="header-row"><text class="card-title">计划明细</text><text class="muted">{{lines.length}} 项</text></view>
+      <view wx:if="{{!lines.length}}" class="empty small-empty">还没有添加计划产品</view>
+      <view wx:for="{{lines}}" wx:key="key" class="plan-line">
+        <view class="week-mark">W{{item.weekNo}}</view>
+        <view class="line-copy"><text>{{item.name}}</text><text class="line-sub">{{item.sku}} · {{item.quantity}} 件</text></view>
+        <text class="remove" data-key="{{item.key}}" bindtap="removeLine">移除</text>
+      </view>
+    </view>
+    <view class="bottom-actions">
+      <button class="btn btn-ghost" disabled="{{saving}}" bindtap="saveDraft">保存草稿</button>
+      <button class="btn btn-primary" loading="{{saving}}" bindtap="submitPlan">提交审核</button>
+    </view>
+  </block>
+</view>

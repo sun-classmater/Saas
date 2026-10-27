@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102b43">
+  <title>三磊·车邻汇 | 客户订货系统</title>
+  <link rel="stylesheet" href="/styles.css?v=0.1.2">
+</head>
+<body>
+  <div id="login-view" class="login-view">
+    <div class="login-brand-panel">
+      <div class="brand-lockup">
+        <span class="brand-mark">三</span>
+        <div>
+          <strong>三磊 · 车邻汇</strong>
+          <span>客户订货协同系统</span>
+        </div>
+      </div>
+      <div class="login-pitch">
+        <p class="eyebrow">CHANNEL COMMERCE</p>
+        <h1>让每一张渠道订单<br><em>清楚、可控、可追溯</em></h1>
+        <p>分级价格、滚动计划、预付款与分批发货在同一条业务链上闭环。</p>
+      </div>
+      <div class="login-stats">
+        <div><strong>7</strong><span>业务模块</span></div>
+        <div><strong>35</strong><span>功能点</span></div>
+        <div><strong>3</strong><span>协同角色</span></div>
+      </div>
+      <div class="roadline" aria-hidden="true"></div>
+    </div>
+    <div class="login-form-panel">
+      <form id="login-form" class="login-card">
+        <p class="eyebrow">WELCOME BACK</p>
+        <h2>登录工作台</h2>
+        <p class="muted">使用内部账号或下方演示身份进入系统</p>
+        <label>
+          <span>用户名</span>
+          <input name="username" autocomplete="username" value="admin" required>
+        </label>
+        <label>
+          <span>密码</span>
+          <input name="password" type="password" autocomplete="current-password" value="Admin@123" required>
+        </label>
+        <p id="login-error" class="form-error" hidden></p>
+        <button class="button primary login-button" type="submit">进入订货系统 <span>→</span></button>
+        <div class="demo-logins">
+          <span>快速选择角色</span>
+          <button type="button" data-demo-user="admin">系统管理员</button>
+          <button type="button" data-demo-user="bangbang">邦邦运营</button>
+          <button type="button" data-demo-user="sanlei">三磊内勤</button>
+          <button type="button" data-demo-user="warehouse">三磊仓库</button>
+        </div>
+        <p class="login-footnote">演示密码统一为 <code>Admin@123</code></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="app-view" class="app-view" hidden>
+    <aside class="sidebar">
+      <div class="brand-lockup sidebar-brand">
+        <span class="brand-mark">三</span>
+        <div><strong>三磊 · 车邻汇</strong><span>ORDER OS</span></div>
+      </div>
+      <nav id="main-nav" aria-label="主导航"></nav>
+      <div class="sidebar-foot">
+        <div class="env-dot"></div>
+        <span>测试环境</span>
+        <small>v0.1.0</small>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div>
+          <button id="mobile-menu" class="icon-button mobile-only" aria-label="打开导航">☰</button>
+          <p class="eyebrow" id="page-eyebrow">OPERATIONS</p>
+          <h1 id="page-title">经营概览</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="notification-button" class="icon-button" aria-label="通知">
+            <span>⌁</span><i id="notice-dot" hidden></i>
+          </button>
+          <div class="user-menu">
+            <span id="user-avatar">管</span>
+            <div><strong id="user-name">系统管理员</strong><small id="user-role">管理员</small></div>
+            <button id="change-password-button" class="text-button">改密</button>
+            <button id="logout-button" class="text-button">退出</button>
+          </div>
+        </div>
+      </header>
+      <main id="page-content" class="page-content" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <dialog id="modal" class="modal">
+    <form id="modal-form" method="dialog">
+      <div class="modal-head">
+        <div><p class="eyebrow">ACTION PANEL</p><h2 id="modal-title"></h2></div>
+        <button class="icon-button" value="cancel" formnovalidate aria-label="关闭">×</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+      <p id="modal-error" class="form-error" hidden></p>
+      <div class="modal-actions">
+        <button class="button ghost" value="cancel" formnovalidate>取消</button>
+        <button id="modal-submit" class="button primary" type="submit">确认</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

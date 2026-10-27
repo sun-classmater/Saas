@@ -1,0 +1,25 @@
+{
+  "name": "sanlei-chelinhui-order-system",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "三磊·车邻汇客户订货系统（微信小程序 + PC 管理端）",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
+    "test": "node --test",
+    "check": "node --check server/index.js && node --check server/database.js && node --check server/routes.js && node --check server/business.js && node --check server/operations.js && node --check server/wechat.js && node --check server/xlsx.js && node --check admin/app.js && node --check miniprogram/app.js",
+    "api:dev": "npm run dev -w @saas/api",
+    "api:start": "npm run start -w @saas/api",
+    "db:migrate": "npm run migrate -w @saas/db",
+    "db:seed": "npm run seed -w @saas/db",
+    "db:import": "node scripts/migrate-sqlite-to-mysql.mjs"
+  },
+  "engines": {
+    "node": ">=24.0"
+  }
+}

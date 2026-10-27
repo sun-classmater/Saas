@@ -1,0 +1,25 @@
+<view class="page aftersales-page">
+  <text class="eyebrow">SERVICE REQUEST</text>
+  <text class="page-title">售后服务</text>
+  <view wx:if="{{loading}}" class="loading">正在加载售后信息…</view>
+  <block wx:else>
+    <view class="callout">质保默认按产品档案中的里程与年限执行，以先达到者为准。提交后由三磊售后审核处理。</view>
+    <view class="card form-card">
+      <text class="card-title">新建售后申请</text>
+      <label class="field"><text class="field-label">关联订单</text><picker mode="selector" range="{{orderNames}}" value="{{orderIndex}}" bindchange="selectOrder"><view class="picker-box">{{orderNames[orderIndex] || '暂无订单'}} <text>›</text></view></picker></label>
+      <label class="field"><text class="field-label">售后类型</text><picker mode="selector" range="{{types}}" range-key="label" value="{{typeIndex}}" bindchange="selectType"><view class="picker-box">{{types[typeIndex].label}} <text>›</text></view></picker></label>
+      <label class="field"><text class="field-label">问题描述</text><textarea class="field-textarea" placeholder="请描述产品型号、故障现象、数量和期望处理方式" value="{{description}}" bindinput="descriptionInput"></textarea></label>
+      <label class="field"><text class="field-label">索赔金额（元，选填）</text><input class="field-input" type="digit" value="{{claimAmount}}" bindinput="amountInput" placeholder="0.00"/></label>
+      <button class="btn btn-primary submit-btn" loading="{{submitting}}" bindtap="submit">提交售后申请</button>
+    </view>
+    <view class="section-title"><text>我的售后记录</text><text>{{cases.length}} 条</text></view>
+    <view wx:if="{{!cases.length}}" class="empty small-empty">暂无售后记录</view>
+    <view wx:for="{{cases}}" wx:key="id" class="case-card card">
+      <view class="case-head"><view><text class="case-no">{{item.caseNo}}</text><text class="case-meta">{{item.typeName}} · {{item.dateText}}</text></view><text class="chip {{item.statusClass}}">{{item.statusName}}</text></view>
+      <text class="case-desc">{{item.description}}</text>
+      <view class="summary-row"><text>关联订单</text><text class="value">{{item.orderNo || '—'}}</text></view>
+      <view class="summary-row"><text>索赔金额</text><text class="value">{{item.amountText}}</text></view>
+      <view class="resolution" wx:if="{{item.resolution}}"><text>处理结论</text>{{item.resolution}}</view>
+    </view>
+  </block>
+</view>

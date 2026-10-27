@@ -1,0 +1,50 @@
+<view class="catalog-page">
+  <view class="catalog-head">
+    <view class="head-top">
+      <view>
+        <text class="eyebrow">CHANNEL CATALOG</text>
+        <text class="welcome">{{customer.name || '产品目录'}}</text>
+      </view>
+      <view class="channel-badge">{{customer.grade || '—'}} 级客户</view>
+    </view>
+    <view class="head-copy">以下为您的专属渠道价格</view>
+    <view class="search-wrap">
+      <text class="search-icon">⌕</text>
+      <input placeholder="搜索产品、物料号或车型" value="{{keyword}}" bindinput="onSearch"/>
+    </view>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="category-row">
+      <view wx:for="{{categories}}" wx:key="*this" class="category-chip {{activeCategory === item ? 'active' : ''}}" data-category="{{item}}" bindtap="selectCategory">{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="page product-page">
+    <view wx:if="{{loading}}" class="loading">正在加载专属产品价格…</view>
+    <view wx:elif="{{error}}" class="empty"><text class="empty-title">加载失败</text>{{error}}<button class="btn btn-ghost retry" bindtap="loadCatalog">重新加载</button></view>
+    <view wx:elif="{{!filtered.length}}" class="empty"><text class="empty-title">暂无可用产品</text>没有匹配当前筛选条件的已定价产品</view>
+    <view wx:else class="product-grid">
+      <view wx:for="{{filtered}}" wx:key="id" class="product-card card" data-id="{{item.id}}" bindtap="openProduct">
+        <view class="product-art category-{{item.category}}">
+          <text>{{item.category}}</text>
+          <view class="stock-tag">可用 {{item.available}}</view>
+        </view>
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-meta">{{item.vehicleModel}} · {{item.sku}}</text>
+          <view class="product-bottom">
+            <text class="product-price">{{item.priceText}}<text class="unit"> / 件</text></text>
+            <button class="add-button" catchtap="addProduct" data-id="{{item.id}}">+</button>
+          </view>
+          <text class="package-note">起订量 {{item.minPackage}} 件</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="cart-fab" bindtap="openCart">
+    <text>购物车</text>
+    <view class="cart-count" wx:if="{{cartCount}}">{{cartCount}}</view>
+  </view>
+</view>

@@ -1,0 +1,10 @@
+.notifications-page { padding-bottom: 70rpx; }
+.page-title { display: block; font-size: 42rpx; font-weight: 700; margin: 4rpx 0 28rpx; }
+.notice-card { display: flex; gap: 16rpx; padding: 23rpx; margin-bottom: 16rpx; position: relative; }
+.notice-card.read { opacity: .66; }
+.notice-dot { width: 14rpx; height: 14rpx; margin-top: 8rpx; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+.notice-card.read .notice-dot { background: #c5cdcf; }
+.notice-copy { min-width: 0; }
+.notice-title { display: block; font-size: 26rpx; font-weight: 700; }
+.notice-content { display: block; color: #5e6f78; font-size: 22rpx; line-height: 1.65; margin-top: 9rpx; }
+.notice-date { display: block; color: #9ba4a9; font-size: 18rpx; margin-top: 13rpx; }

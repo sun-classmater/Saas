@@ -1,0 +1,27 @@
+<view class="login-page">
+  <view class="hero">
+    <view class="brand-mark">三</view>
+    <text class="eyebrow">SANLEI · CHELINHUI</text>
+    <text class="hero-title">客户订货，<br/>在手机上完成。</text>
+    <text class="hero-copy">专属价格 · 月度计划 · 预付款 · 分批发货查询</text>
+    <view class="road-shape"></view>
+  </view>
+  <view class="login-panel">
+    <text class="login-title">进入我的订货系统</text>
+    <text class="login-copy">仅限后台已开通的渠道客户登录。</text>
+    <view class="field" wx:if="{{mode === 'mock'}}">
+      <text class="field-label">微信绑定手机号</text>
+      <input class="phone-input" type="number" maxlength="11" value="{{phone}}" bindinput="onPhoneInput" placeholder="请输入手机号"/>
+    </view>
+    <view class="form-error" wx:if="{{error}}">{{error}}</view>
+    <button wx:if="{{mode === 'mock'}}" class="btn btn-primary login-button" loading="{{loading}}" bindtap="login">登录订货系统</button>
+    <button wx:else class="btn btn-primary login-button" open-type="getPhoneNumber" loading="{{loading}}" bindgetphonenumber="loginWithWechat">微信手机号快捷登录</button>
+    <view class="login-note">
+      <text>{{mode === 'mock' ? '当前为测试登录模式' : '已启用微信授权登录'}}</text>
+      <text>{{mode === 'mock' ? '正式版将使用微信手机号授权' : '仅匹配后台预开通客户'}}</text>
+    </view>
+    <view class="demo-phones" wx:if="{{mode === 'mock'}}">
+      <text>演示客户：13800000001 / 02 / 03</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,21 @@
+.orders-page { min-height: 100vh; }
+.orders-head { padding: 40rpx 34rpx 28rpx; background: linear-gradient(150deg, var(--navy-deep), var(--navy) 80%, #165164); color: #fff; }
+.orders-head .eyebrow { color: #77d5ce; }
+.head-title { display: block; font-size: 42rpx; font-weight: 700; }
+.head-copy { display: block; color: rgba(255,255,255,.58); font-size: 23rpx; margin-top: 14rpx; }
+.tabs-scroll { white-space: nowrap; background: var(--paper); border-bottom: 1rpx solid var(--line); }
+.tabs-row { display: inline-flex; padding: 0 22rpx; }
+.tab { padding: 27rpx 24rpx 22rpx; border-bottom: 4rpx solid transparent; color: var(--muted); font-size: 24rpx; }
+.tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 700; }
+.list-page { padding-top: 22rpx; }
+.order-card { padding: 24rpx; margin-bottom: 20rpx; }
+.order-head { display: flex; justify-content: space-between; align-items: center; gap: 12rpx; }
+.order-no { display: block; font-weight: 700; font-size: 26rpx; }
+.order-date { display: block; color: var(--muted); font-size: 20rpx; margin-top: 6rpx; }
+.order-main { display: flex; align-items: center; gap: 18rpx; padding: 25rpx 0; margin-top: 18rpx; border-top: 1rpx solid var(--line); border-bottom: 1rpx solid var(--line); }
+.vehicle-block { width: 104rpx; height: 82rpx; border-radius: 14rpx; background: #e9f3f0; display: flex; align-items: center; justify-content: center; text-align: center; color: #4a706b; font-size: 20rpx; font-weight: 700; padding: 8rpx; }
+.order-info { flex: 1; min-width: 0; }
+.order-type { display: block; font-size: 27rpx; font-weight: 600; }
+.order-meta { display: block; color: var(--muted); font-size: 19rpx; margin-top: 8rpx; }
+.order-total { font-size: 28rpx; font-weight: 800; }
+.order-foot { display: flex; justify-content: space-between; color: var(--muted); font-size: 20rpx; padding-top: 19rpx; }

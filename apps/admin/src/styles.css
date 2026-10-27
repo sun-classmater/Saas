@@ -1,0 +1,235 @@
+:root {
+  --ink: #102b43;
+  --muted: #6b7a86;
+  --line: #e5e9ef;
+  --bg: #f5f7fa;
+  --teal: #087f78;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+/* 登录 */
+.login-view {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  gap: 48px;
+  padding: 8vw;
+  background: linear-gradient(135deg, #0f2b43 0%, #123b52 55%, #0b5f5a 100%);
+}
+
+.login-brand h1 {
+  margin: 18px 0;
+  font-size: 42px;
+  line-height: 1.35;
+  color: #f7fbff;
+}
+
+.login-brand em {
+  font-style: normal;
+  color: #7de0d2;
+}
+
+.login-brand .muted {
+  color: #b8c9d6;
+}
+
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  justify-self: end;
+  border-radius: 18px;
+}
+
+.login-card h2 {
+  margin: 0 0 6px;
+}
+
+.login-button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* 应用框架 */
+.app-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background: #0f2b43;
+  color: #e6eef5;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 22px 20px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #7de0d2;
+  color: #0f2b43;
+  font-weight: 700;
+}
+
+.brand strong {
+  display: block;
+  font-size: 14px;
+}
+
+.brand small {
+  color: #9fb4c4;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.nav-menu {
+  border-right: 0;
+  background: transparent;
+}
+
+.nav-menu .el-menu-item {
+  color: #c9d7e2;
+  height: 42px;
+  margin: 2px 10px;
+  border-radius: 8px;
+}
+
+.nav-menu .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.nav-menu .el-menu-item.is-active {
+  background: #7de0d2;
+  color: #0f2b43;
+  font-weight: 600;
+}
+
+.nav-group {
+  padding: 16px 22px 6px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: #7f95a6;
+}
+
+.sidebar-foot {
+  margin-top: auto;
+  padding: 18px 22px;
+  font-size: 11px;
+  color: #7f95a6;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  height: 78px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-user small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e6faf6;
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.page-main {
+  padding: 22px 26px 40px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.metric-grid h3 {
+  margin: 8px 0 4px;
+  font-size: 22px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 900px) {
+  .login-view {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .login-card {
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}

@@ -1,0 +1,38 @@
+<view class="page confirm-page">
+  <view wx:if="{{loading}}" class="loading">正在准备订单…</view>
+  <block wx:else>
+    <text class="eyebrow">ORDER CONFIRMATION</text>
+    <text class="page-title">确认本次订货</text>
+    <view class="card section">
+      <text class="section-label">订单类型</text>
+      <picker mode="selector" range="{{orderTypes}}" range-key="label" value="{{typeIndex}}" bindchange="selectType">
+        <view class="picker-row"><text>{{orderTypes[typeIndex].label}}</text><text class="chevron">›</text></view>
+      </picker>
+      <view class="summary-row"><text>结算方式</text><text class="value">{{settlementLabel}}</text></view>
+      <view class="summary-row" wx:if="{{orderTypes[typeIndex].value === 'PLAN'}}"><text>采购计划</text><picker mode="selector" range="{{planNames}}" value="{{planIndex}}" bindchange="selectPlan"><view class="mini-picker">{{planNames[planIndex] || '请选择'}} ›</view></picker></view>
+      <view class="summary-row" wx:if="{{orderTypes[typeIndex].value === 'PLAN'}}"><text>计划周</text><picker mode="selector" range="{{weekOptions}}" value="{{weekIndex}}" bindchange="selectWeek"><view class="mini-picker">{{weekOptions[weekIndex]}} ›</view></picker></view>
+    </view>
+    <view class="card section">
+      <view class="section-heading"><text class="section-label">产品明细</text><text>{{items.length}} 项</text></view>
+      <view wx:for="{{items}}" wx:key="product.id" class="line-item">
+        <view class="line-index">{{index + 1}}</view>
+        <view class="line-copy"><text class="line-name">{{item.product.name}}</text><text class="line-meta">{{item.product.sku}} · {{item.quantity}} 件</text></view>
+        <text class="line-total">{{item.lineTotal}}</text>
+      </view>
+    </view>
+    <view class="card section">
+      <text class="section-label">客户与收货信息</text>
+      <view class="summary-row"><text>客户</text><text class="value">{{profile.name}}</text></view>
+      <view class="summary-row"><text>渠道等级</text><text class="value">{{profile.grade}} · {{profile.priceTier}}</text></view>
+      <view class="summary-row"><text>收货地址</text><text class="value address">{{profile.address || '待补充'}}</text></view>
+      <text class="field-label note-label">订单备注</text>
+      <textarea class="field-textarea" placeholder="交期、收货或其他要求（选填）" value="{{note}}" bindinput="onNoteInput"></textarea>
+    </view>
+    <view class="callout">预付款订单需到账达到约定比例后，才进入三磊接单；每批发货金额不会超过当前可用的已付款额度。</view>
+    <view class="confirm-summary card">
+      <view class="summary-row total-row"><text>本次订单金额</text><text class="price">{{total}}</text></view>
+      <view class="fine-print">最终金额以订单提交时的客户专属价格快照为准</view>
+    </view>
+    <button class="btn btn-primary submit-button" loading="{{submitting}}" bindtap="submit">提交给邦邦确认</button>
+  </block>
+</view>

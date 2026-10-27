@@ -1,0 +1,32 @@
+.plans-page { min-height: 100vh; }
+.plans-head { padding: 42rpx 34rpx 36rpx; background: linear-gradient(150deg, var(--navy-deep), var(--navy) 80%, #165164); color: #fff; display: flex; justify-content: space-between; align-items: center; }
+.plans-head .eyebrow { color: #77d5ce; }
+.head-title { display: block; font-size: 42rpx; font-weight: 700; }
+.head-copy { display: block; color: rgba(255,255,255,.58); font-size: 23rpx; margin-top: 14rpx; }
+.new-button { min-width: 126rpx; height: 68rpx; line-height: 68rpx; padding: 0; border-radius: 16rpx 16rpx 16rpx 4rpx; background: var(--orange); color: #fff; font-size: 24rpx; font-weight: 600; }
+.list-page { padding-top: 22rpx; }
+.plan-guide { display: flex; align-items: center; padding: 20rpx; margin-bottom: 22rpx; }
+.guide-step { flex: 1; min-width: 0; }
+.guide-step > text { display: inline-block; color: var(--teal); font-size: 19rpx; font-weight: 800; margin-bottom: 7rpx; }
+.guide-step .guide-strong { display: block; font-size: 21rpx; font-weight: 700; }
+.guide-step .guide-small { display: block; color: var(--muted); font-size: 17rpx; margin-top: 4rpx; }
+.guide-line { width: 20rpx; height: 1rpx; background: var(--line); margin: 0 8rpx; }
+.plan-card { padding: 24rpx; margin-bottom: 20rpx; }
+.plan-head { display: flex; justify-content: space-between; align-items: center; }
+.plan-month { display: block; font-size: 34rpx; font-weight: 800; }
+.plan-no { display: block; color: var(--muted); font-size: 19rpx; margin-top: 6rpx; }
+.week-strip { display: flex; gap: 9rpx; overflow-x: auto; margin: 20rpx 0; padding: 15rpx; background: #f5f6f2; border-radius: 13rpx; }
+.week-box { min-width: 82rpx; text-align: center; }
+.week-box text { display: block; color: var(--muted); font-size: 17rpx; }
+.week-box .week-total { font-size: 27rpx; color: var(--teal); font-weight: 700; }
+.week-box .week-unit { font-size: 17rpx; color: var(--muted); margin-left: 2rpx; }
+.plan-footer { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 20rpx; }
+.plan-actions { display: flex; gap: 7rpx; }
+.text-btn { border: 0; background: #f0f2f1; border-radius: 9rpx; padding: 0 15rpx; height: 50rpx; line-height: 50rpx; font-size: 21rpx; color: #56666e; }
+.text-btn.accent { background: var(--teal); color: #fff; }
+.plan-detail { border-top: 1rpx solid var(--line); margin-top: 18rpx; padding-top: 8rpx; }
+.plan-line { display: flex; justify-content: space-between; align-items: center; padding: 13rpx 0; border-bottom: 1rpx dashed var(--line); font-size: 22rpx; }
+.plan-line:last-child { border-bottom: 0; }
+.plan-line .line-sub { display: block; color: var(--muted); font-size: 18rpx; margin-top: 4rpx; }
+.line-quantity { font-weight: 700; }
+.plan-note { display: block; color: #7d5c37; background: #fff5e8; border-radius: 10rpx; padding: 13rpx; font-size: 20rpx; margin-top: 12rpx; }

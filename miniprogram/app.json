@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/catalog/index",
+    "pages/login/index",
+    "pages/product/index",
+    "pages/cart/index",
+    "pages/order-confirm/index",
+    "pages/orders/index",
+    "pages/order-detail/index",
+    "pages/plans/index",
+    "pages/plan-edit/index",
+    "pages/profile/index",
+    "pages/notifications/index",
+    "pages/after-sales/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#102b43",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "三磊·车邻汇",
+    "backgroundColor": "#f4f2eb",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#77858d",
+    "selectedColor": "#087f78",
+    "backgroundColor": "#fffdf9",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/catalog/index", "text": "商城" },
+      { "pagePath": "pages/orders/index", "text": "订单" },
+      { "pagePath": "pages/plans/index", "text": "采购计划" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

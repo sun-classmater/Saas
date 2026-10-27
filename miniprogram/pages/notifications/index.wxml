@@ -1,0 +1,12 @@
+<view class="page notifications-page">
+  <text class="eyebrow">MESSAGE CENTER</text>
+  <text class="page-title">消息通知</text>
+  <view wx:if="{{loading}}" class="loading">正在加载通知…</view>
+  <view wx:elif="{{!notifications.length}}" class="empty"><text class="empty-title">暂无消息</text>订单与计划状态变化会在这里提醒</view>
+  <view wx:else class="notice-list">
+    <view wx:for="{{notifications}}" wx:key="id" class="notice-card card {{item.read ? 'read' : ''}}" data-id="{{item.id}}" bindtap="markRead">
+      <view class="notice-dot"></view>
+      <view class="notice-copy"><text class="notice-title">{{item.title}}</text><text class="notice-content">{{item.content}}</text><text class="notice-date">{{item.dateText}}</text></view>
+    </view>
+  </view>
+</view>

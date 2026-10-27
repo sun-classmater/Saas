@@ -1,0 +1,9 @@
+data
+node_modules
+.git
+*.log
+miniprogram
+test
+docs
+*.xlsx
+新建 文本文档.txt

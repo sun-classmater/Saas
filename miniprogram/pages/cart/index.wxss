@@ -1,0 +1,21 @@
+.cart-page { padding-bottom: 180rpx; }
+.cart-head { display: flex; justify-content: space-between; align-items: flex-end; padding: 18rpx 5rpx 28rpx; }
+.cart-title { display: block; font-size: 42rpx; font-weight: 700; }
+.clear-link { color: var(--muted); font-size: 23rpx; padding: 10rpx; }
+.cart-item { display: flex; gap: 22rpx; padding: 20rpx; margin-bottom: 18rpx; }
+.cart-art { width: 142rpx; height: 150rpx; border-radius: 18rpx; background: linear-gradient(150deg, #e4ece9, #f8f5ed); display: flex; align-items: center; justify-content: center; color: #58736f; font-weight: 700; font-size: 26rpx; flex-shrink: 0; }
+.cart-info { flex: 1; min-width: 0; }
+.cart-name { display: block; font-size: 28rpx; font-weight: 700; }
+.cart-meta { display: block; color: var(--muted); font-size: 20rpx; margin-top: 7rpx; }
+.cart-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 22rpx; }
+.cart-price { color: var(--teal); font-size: 28rpx; font-weight: 800; }
+.qty-stepper { display: flex; align-items: center; background: #f4f4f0; border-radius: 11rpx; overflow: hidden; }
+.qty-stepper button { width: 49rpx; height: 48rpx; padding: 0; line-height: 48rpx; font-size: 28rpx; background: transparent; }
+.qty-stepper text { min-width: 55rpx; text-align: center; font-size: 23rpx; }
+.remove-link { display: block; color: #9da6ab; font-size: 20rpx; text-align: right; margin-top: 8rpx; }
+.cart-summary { padding: 20rpx 24rpx; margin-top: 28rpx; }
+.total-row { border-top: 1rpx solid var(--line); margin-top: 8rpx; padding-top: 22rpx; font-size: 29rpx; }
+.bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; display: flex; align-items: center; justify-content: space-between; gap: 20rpx; padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom)); background: rgba(255,253,249,.97); border-top: 1rpx solid var(--line); }
+.bar-label { display: block; color: var(--muted); font-size: 20rpx; }
+.bar-price { display: block; font-size: 34rpx; font-weight: 800; color: var(--teal); }
+.bottom-bar .btn { min-width: 250rpx; height: 78rpx; }

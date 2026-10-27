@@ -1,0 +1,17 @@
+{$DOMAIN} {
+  encode zstd gzip
+
+  handle /api/* {
+    reverse_proxy api:8788
+  }
+
+  handle {
+    reverse_proxy admin:80
+  }
+
+  header {
+    X-Content-Type-Options nosniff
+    Referrer-Policy no-referrer
+    -Server
+  }
+}

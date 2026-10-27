@@ -1,0 +1,15 @@
+.aftersales-page { padding-bottom: 70rpx; }
+.page-title { display: block; font-size: 42rpx; font-weight: 700; margin: 4rpx 0 22rpx; }
+.form-card { padding: 25rpx; margin-top: 20rpx; }
+.card-title { display: block; font-size: 28rpx; font-weight: 700; margin-bottom: 22rpx; }
+.picker-box { height: 80rpx; padding: 0 20rpx; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1rpx solid var(--line); border-radius: 14rpx; font-size: 24rpx; }
+.picker-box text { color: var(--muted); font-size: 35rpx; }
+.submit-btn { width: 100%; }
+.small-empty { padding: 40rpx 0; font-size: 22rpx; }
+.case-card { padding: 23rpx; margin-bottom: 17rpx; }
+.case-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.case-no { display: block; font-size: 25rpx; font-weight: 700; }
+.case-meta { display: block; color: var(--muted); font-size: 18rpx; margin-top: 6rpx; }
+.case-desc { display: block; color: #4f616b; font-size: 22rpx; line-height: 1.7; margin: 18rpx 0 8rpx; padding-bottom: 12rpx; border-bottom: 1rpx solid var(--line); }
+.resolution { margin-top: 12rpx; background: #f1f7f5; border-radius: 12rpx; padding: 15rpx; color: #49655f; font-size: 20rpx; line-height: 1.6; }
+.resolution text { display: block; font-weight: 700; color: var(--teal); margin-bottom: 4rpx; }

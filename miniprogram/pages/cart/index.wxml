@@ -1,0 +1,34 @@
+<view class="page cart-page">
+  <view class="cart-head">
+    <view><text class="eyebrow">ORDER CART</text><text class="cart-title">本次订货</text></view>
+    <text class="clear-link" bindtap="clearCart" wx:if="{{items.length}}">清空</text>
+  </view>
+  <view wx:if="{{!items.length}}" class="empty"><text class="empty-title">购物车是空的</text>返回产品目录选择需要订货的产品</view>
+  <view wx:else class="cart-list">
+    <view wx:for="{{items}}" wx:key="product.id" class="cart-item card">
+      <view class="cart-art">{{item.product.category}}</view>
+      <view class="cart-info">
+        <text class="cart-name">{{item.product.name}}</text>
+        <text class="cart-meta">{{item.product.vehicleModel}} · {{item.product.sku}}</text>
+        <view class="cart-bottom">
+          <text class="cart-price">{{item.lineTotal}}</text>
+          <view class="qty-stepper">
+            <button data-id="{{item.product.id}}" data-delta="-1" bindtap="changeQuantity">−</button>
+            <text>{{item.quantity}}</text>
+            <button data-id="{{item.product.id}}" data-delta="1" bindtap="changeQuantity">+</button>
+          </view>
+        </view>
+        <text class="remove-link" data-id="{{item.product.id}}" bindtap="removeItem">移除</text>
+      </view>
+    </view>
+  </view>
+  <view class="cart-summary card" wx:if="{{items.length}}">
+    <view class="summary-row"><text>产品合计</text><text class="value">{{quantity}} 件</text></view>
+    <view class="summary-row"><text>价格口径</text><text class="value">含税渠道价</text></view>
+    <view class="summary-row total-row"><text>订单金额</text><text class="price">{{total}}</text></view>
+  </view>
+  <view class="bottom-bar safe-bottom" wx:if="{{items.length}}">
+    <view><text class="bar-label">合计</text><text class="bar-price">{{total}}</text></view>
+    <button class="btn btn-primary" bindtap="confirmOrder">填写订单</button>
+  </view>
+</view>

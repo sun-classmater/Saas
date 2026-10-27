@@ -1,0 +1,45 @@
+<view class="plans-page">
+  <view class="plans-head">
+    <view>
+      <text class="eyebrow">PURCHASE PLAN</text>
+      <text class="head-title">月度采购计划</text>
+      <text class="head-copy">先报计划，再按计划周下单</text>
+    </view>
+    <button class="new-button" bindtap="createPlan">+ 新建</button>
+  </view>
+  <view class="page list-page">
+    <view class="plan-guide card">
+      <view class="guide-step"><text>01</text><view><text class="guide-strong">客户上报</text><text class="guide-small">按周填写采购数量</text></view></view>
+      <view class="guide-line"></view>
+      <view class="guide-step"><text>02</text><view><text class="guide-strong">邦邦核对</text><text class="guide-small">汇总渠道需求</text></view></view>
+      <view class="guide-line"></view>
+      <view class="guide-step"><text>03</text><view><text class="guide-strong">三磊生效</text><text class="guide-small">确认备货能力</text></view></view>
+    </view>
+    <view wx:if="{{loading}}" class="loading">正在加载采购计划…</view>
+    <view wx:elif="{{!plans.length}}" class="empty"><text class="empty-title">还没有月度计划</text>创建计划后，邦邦与三磊将依次审核</view>
+    <view wx:else>
+      <view wx:for="{{plans}}" wx:key="id" class="plan-card card">
+        <view class="plan-head" data-id="{{item.id}}" bindtap="togglePlan">
+          <view><text class="plan-month">{{item.planMonth}}</text><text class="plan-no">{{item.planNo}}</text></view>
+          <text class="chip {{item.statusClass}}">{{item.statusName}}</text>
+        </view>
+        <view class="week-strip">
+          <view wx:for="{{item.weeks}}" wx:key="weekNo" class="week-box"><text>第{{item.weekNo}}周</text><text class="week-total">{{item.total}}</text><text class="week-unit">件</text></view>
+        </view>
+        <view class="plan-footer">
+          <text>{{item.itemCount}} 个产品 · 共 {{item.totalQuantity}} 件</text>
+          <view class="plan-actions">
+            <button wx:if="{{item.status === 'DRAFT' || item.status === 'REJECTED'}}" class="text-btn" data-id="{{item.id}}" bindtap="editPlan">修改</button>
+            <button wx:if="{{item.status === 'DRAFT' || item.status === 'REJECTED'}}" class="text-btn accent" data-id="{{item.id}}" data-action="SUBMIT" bindtap="planAction">提交</button>
+            <button wx:if="{{item.status === 'BANGBANG_REVIEW' || item.status === 'SANLEI_REVIEW'}}" class="text-btn" data-id="{{item.id}}" data-action="WITHDRAW" bindtap="planAction">撤回修改</button>
+          </view>
+        </view>
+        <view class="plan-detail" wx:if="{{activePlan === item.id}}">
+          <view wx:for="{{item.items}}" wx:key="id" class="plan-line"><view><text>{{item.name}}</text><text class="line-sub">第{{item.weekNo}}周 · {{item.sku}}</text></view><text class="line-quantity">{{item.quantity}} 件</text></view>
+          <text class="plan-note" wx:if="{{item.bangbangNote}}">邦邦意见：{{item.bangbangNote}}</text>
+          <text class="plan-note" wx:if="{{item.sanleiNote}}">三磊意见：{{item.sanleiNote}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

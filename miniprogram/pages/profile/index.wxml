@@ -1,0 +1,43 @@
+<view class="profile-page">
+  <view class="profile-hero">
+    <view class="profile-top">
+      <view class="avatar">{{profile.avatarText || '客'}}</view>
+      <view class="profile-copy"><text class="customer-name">{{profile.name || '正在加载'}}</text><text class="customer-code">{{profile.code || ''}} · {{profile.city || ''}}</text></view>
+      <text class="grade-badge">{{profile.grade || '—'}} 级</text>
+    </view>
+    <view class="hero-metrics">
+      <view><text class="metric-strong">{{orderCount}}</text><text>累计订单</text></view>
+      <view><text class="metric-strong">{{profile.priceTier || '—'}}</text><text>价格等级</text></view>
+      <view><text class="metric-strong">{{profile.settlementName || '—'}}</text><text>结算方式</text></view>
+    </view>
+  </view>
+
+  <view class="page profile-content">
+    <view wx:if="{{loading}}" class="loading">正在加载账户信息…</view>
+    <block wx:else>
+      <view class="card credit-card">
+        <view class="card-head"><text>信用与结算</text><text class="muted">{{profile.paymentTermsDays ? profile.paymentTermsDays + '天账期' : '预付款结算'}}</text></view>
+        <view class="credit-bar"><view class="credit-fill" style="width:{{profile.creditLimit > 0 ? (profile.creditOutstanding / profile.creditLimit * 100 > 100 ? 100 : profile.creditOutstanding / profile.creditLimit * 100) : 0}}%"></view></view>
+        <view class="credit-row"><view><text>授信额度</text><text class="credit-value">{{profile.creditLimitText}}</text></view><view class="align-right"><text>当前占用</text><text class="credit-value">{{profile.outstandingText}}</text></view></view>
+        <view class="summary-row"><text>预付款可发货门槛</text><text class="value">{{profile.prepayPercent}}%</text></view>
+        <view class="summary-row"><text>单笔订单最多批次</text><text class="value">{{profile.batchLimit}} 批</text></view>
+      </view>
+
+      <view class="card menu-card">
+        <view class="menu-row" bindtap="openNotifications"><view class="menu-icon">⌁</view><view class="menu-copy"><text>消息通知</text><text class="menu-small">订单、付款与物流状态</text></view><text class="menu-right">{{unread ? unread + ' 条未读' : '暂无未读'}} ›</text></view>
+        <view class="menu-row" bindtap="openAfterSales"><view class="menu-icon">✚</view><view class="menu-copy"><text>售后服务</text><text class="menu-small">退货、索赔、发错货与质量反馈</text></view><text class="menu-right">›</text></view>
+        <view class="menu-row" bindtap="contactService"><view class="menu-icon">☎</view><view class="menu-copy"><text>联系专属服务</text><text class="menu-small">工作日 09:00–18:00</text></view><text class="menu-right">›</text></view>
+      </view>
+
+      <view class="card account-card">
+        <text class="account-title">收货信息</text>
+        <text class="account-address">{{profile.address || '尚未维护收货地址，请联系运营人员补充'}}</text>
+        <view class="divider"></view>
+        <view class="summary-row"><text>绑定手机</text><text class="value">{{profile.phone}}</text></view>
+        <view class="summary-row"><text>渠道类型</text><text class="value">{{profile.channelName}}</text></view>
+      </view>
+      <button class="btn btn-ghost logout-button" bindtap="logout">退出当前账号</button>
+      <text class="version">三磊·车邻汇 ORDER SYSTEM v0.1.0</text>
+    </block>
+  </view>
+</view>

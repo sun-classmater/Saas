@@ -1,0 +1,76 @@
+<view class="page detail-page">
+  <view wx:if="{{loading}}" class="loading">正在加载订单详情…</view>
+  <block wx:elif="{{order}}">
+    <view class="status-hero">
+      <view class="status-top">
+        <view>
+          <text class="eyebrow">ORDER STATUS</text>
+          <text class="status-title">{{order.statusName}}</text>
+        </view>
+        <text class="chip {{order.statusClass}}">{{order.typeName}}</text>
+      </view>
+      <text class="status-note" wx:if="{{order.status === 'PENDING_BANGBANG'}}">等待邦邦运营确认订单和收款方式</text>
+      <text class="status-note" wx:elif="{{order.status === 'PENDING_PAYMENT'}}">预付款到账后进入三磊接单</text>
+      <text class="status-note" wx:elif="{{order.status === 'PREPARING'}}">三磊正在备货，请留意后续发货通知</text>
+      <text class="status-note" wx:elif="{{order.status === 'PARTIALLY_SHIPPED'}}">部分产品已发出，可查看物流并分批签收</text>
+      <text class="status-note" wx:elif="{{order.status === 'SHIPPED'}}">订单已全部发出，请确认收货</text>
+      <text class="status-note" wx:elif="{{order.status === 'COMPLETED'}}">订单已签收完成，感谢您的订购</text>
+      <view class="amount-row">
+        <view><text class="amount-label">订单金额</text><text class="amount-value">{{order.totalText}}</text></view>
+        <view class="amount-side"><text>已付 {{order.paidText}}</text><text>已发 {{order.shippedText}}</text></view>
+      </view>
+    </view>
+
+    <view class="card info-card">
+      <text class="card-title">订单信息</text>
+      <view class="summary-row"><text>订单号</text><text class="value">{{order.orderNo}}</text></view>
+      <view class="summary-row"><text>总单号</text><text class="value">{{order.groupNo}}</text></view>
+      <view class="summary-row"><text>车型</text><text class="value">{{order.vehicleModel}}</text></view>
+      <view class="summary-row"><text>结算方式</text><text class="value">{{order.settlementName}}</text></view>
+      <view class="summary-row"><text>下单时间</text><text class="value">{{order.dateText}}</text></view>
+      <view class="summary-row" wx:if="{{order.customerNote}}"><text>备注</text><text class="value">{{order.customerNote}}</text></view>
+    </view>
+
+    <view class="card info-card" wx:if="{{order.siblings.length > 1}}">
+      <view class="group-head"><text class="card-title">合并总单 {{order.groupNo}}</text><text class="group-total">{{order.groupTotalText}}</text></view>
+      <view wx:for="{{order.siblings}}" wx:key="id" class="sibling-row">
+        <view><text>{{item.vehicleModel}}</text><text class="sibling-no">{{item.orderNo}}</text></view>
+        <view class="sibling-right"><text>{{item.totalText}}</text><text class="sibling-status">{{item.statusName}}</text></view>
+      </view>
+    </view>
+
+    <view class="card info-card">
+      <text class="card-title">产品明细</text>
+      <view wx:for="{{order.items}}" wx:key="id" class="detail-line">
+        <view class="line-art">{{item.category}}</view>
+        <view class="line-info"><text class="line-name">{{item.name}}</text><text class="line-meta">{{item.sku}} · {{item.unitPriceText}} × {{item.quantity}}</text><text class="line-ship">已发 {{item.shippedQuantity}} / {{item.quantity}}</text></view>
+        <text class="line-amount">{{item.amountText}}</text>
+      </view>
+    </view>
+
+    <view class="card info-card" wx:if="{{order.shipments.length}}">
+      <text class="card-title">发货与物流</text>
+      <view wx:for="{{order.shipments}}" wx:key="id" class="shipment-block">
+        <view class="shipment-head"><view><text class="shipment-title">第 {{item.batchNo}} 批发货</text><text class="shipment-date">{{item.dateText}}</text></view><text class="chip {{item.statusClass}}">{{item.statusName}}</text></view>
+        <text class="shipment-summary">{{item.summary}}</text>
+        <view class="summary-row" wx:if="{{item.dispatchLocation}}"><text>发货地点</text><text class="value">{{item.dispatchLocation}}</text></view>
+        <view class="summary-row"><text>{{item.logisticsCompany || '物流待补充'}}</text><text class="value">{{item.trackingNo || '暂无运单号'}}</text></view>
+        <button wx:if="{{item.status !== 'RECEIVED'}}" class="btn btn-ghost btn-small receive-btn" data-id="{{item.id}}" bindtap="receiveShipment">确认本批收货</button>
+      </view>
+    </view>
+
+    <view class="card info-card" wx:if="{{order.payments.length}}">
+      <text class="card-title">支付记录</text>
+      <view wx:for="{{order.payments}}" wx:key="id" class="payment-line">
+        <view><text class="payment-amount">{{item.amountText}}</text><text class="payment-meta">{{item.paymentNo}}</text></view>
+        <text class="chip {{item.status === 'SUCCEEDED' ? 'chip-success' : 'chip-warning'}}">{{item.statusName}}</text>
+      </view>
+    </view>
+
+    <view class="action-panel">
+      <button wx:if="{{order.settlementMethod === 'PREPAY' && (order.status === 'PENDING_PAYMENT' || order.status === 'PARTIALLY_PAID')}}" class="btn btn-primary action-main" loading="{{paying}}" bindtap="pay">支付预付款</button>
+      <button wx:if="{{order.status === 'PENDING_BANGBANG' || order.status === 'PENDING_PAYMENT' || order.status === 'PARTIALLY_PAID'}}" class="btn btn-danger action-side" bindtap="cancelOrder">取消订单</button>
+      <button wx:if="{{order.status === 'COMPLETED'}}" class="btn btn-ghost action-side" bindtap="openAfterSales">申请售后</button>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,16 @@
+data/
+node_modules/
+.npm-cache/
+.env
+.env.txt
+.gitee-token
+*.log
+.logs/
+.DS_Store
+.idea/
+*.iml
+miniprogram/project.private.config.json
+coverage/
+dist/
+*.xlsx
+新建 文本文档.txt

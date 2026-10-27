@@ -1,0 +1,38 @@
+<view class="page product-detail-page">
+  <view wx:if="{{loading}}" class="loading">正在加载产品…</view>
+  <view wx:elif="{{error}}" class="empty"><text class="empty-title">产品不可用</text>{{error}}</view>
+  <block wx:else>
+    <view class="product-hero card">
+      <text class="product-category">{{product.category}}</text>
+      <view class="visual-ring"></view>
+      <text class="product-number">{{product.sku}}</text>
+    </view>
+    <view class="detail-head">
+      <view>
+        <text class="product-title">{{product.name}}</text>
+        <text class="product-sub">{{product.vehicleModel}} · 最小包装 {{product.minPackage}} 件</text>
+      </view>
+      <text class="price-main">{{product.priceText}}</text>
+    </view>
+    <view class="price-note card">当前价格来源：{{product.priceSource === 'CUSTOMER_SPECIFIC' ? '您的客户专属价' : '客户价格等级价'}}</view>
+    <view class="card section-card">
+      <text class="section-label">库存与交付</text>
+      <view class="summary-row"><text>真实库存可用</text><text class="value">{{product.realAvailable}} 件</text></view>
+      <view class="summary-row"><text>供应商储备可用</text><text class="value">{{product.virtualAvailable}} 件</text></view>
+      <view class="summary-row"><text>起订数量</text><text class="value">{{product.minPackage}} 件</text></view>
+    </view>
+    <view class="card section-card">
+      <text class="section-label">质保与说明</text>
+      <view class="summary-row"><text>质保周期</text><text class="value">{{product.warrantyMonths}}个月 / {{product.warrantyKm}}公里</text></view>
+      <text class="description">{{product.description || '暂无补充说明'}}</text>
+    </view>
+    <view class="purchase-bar safe-bottom">
+      <view class="quantity-control">
+        <button data-delta="-1" bindtap="changeQuantity">−</button>
+        <text>{{quantity}}</text>
+        <button data-delta="1" bindtap="changeQuantity">+</button>
+      </view>
+      <button class="btn btn-primary add-cart" bindtap="addToCart">加入购物车 <text wx:if="{{cartCount}}">({{cartCount}})</text></button>
+    </view>
+  </block>
+</view>

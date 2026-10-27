@@ -1,0 +1,20 @@
+.plan-edit-page { padding-bottom: 160rpx; }
+.page-title { display: block; font-size: 42rpx; font-weight: 700; margin: 5rpx 0 23rpx; }
+.form-card { padding: 25rpx; margin-top: 20rpx; }
+.card-title { font-size: 28rpx; font-weight: 700; }
+.picker-box { height: 80rpx; padding: 0 20rpx; display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1rpx solid var(--line); border-radius: 14rpx; }
+.picker-box text { color: var(--muted); font-size: 36rpx; }
+.form-row { display: flex; gap: 16rpx; }
+.half { flex: 1; }
+.add-line-btn { width: 100%; margin-top: 8rpx; }
+.header-row { display: flex; justify-content: space-between; align-items: center; }
+.small-empty { padding: 45rpx 0; font-size: 22rpx; }
+.plan-line { display: flex; align-items: center; gap: 15rpx; padding: 18rpx 0; border-bottom: 1rpx solid var(--line); }
+.plan-line:last-child { border-bottom: 0; }
+.week-mark { width: 65rpx; height: 65rpx; border-radius: 13rpx; background: var(--teal-light); color: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 21rpx; font-weight: 800; }
+.line-copy { flex: 1; }
+.line-copy text { display: block; font-size: 24rpx; font-weight: 600; }
+.line-copy .line-sub { display: block; color: var(--muted); font-size: 19rpx; margin-top: 5rpx; }
+.remove { color: var(--danger); font-size: 21rpx; padding: 10rpx; }
+.bottom-actions { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 14rpx; padding: 18rpx 28rpx calc(18rpx + env(safe-area-inset-bottom)); background: rgba(255,253,249,.97); border-top: 1rpx solid var(--line); z-index: 9; }
+.bottom-actions .btn { flex: 1; }
