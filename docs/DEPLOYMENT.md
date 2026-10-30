@@ -53,7 +53,7 @@ npm run db:import       # 可选：导入 data/order-system.db 演示数据
 
 ```bash
 node verify-api-http.mjs          # 77 项契约验收（隔离库 saas_verify，自动清理）
-npm test -w @saas/api             # 54 项新测试
+npm test -w @saas/backend         # 54 项新测试
 node test/api.test.js             # 12 项旧版单测
 ```
 

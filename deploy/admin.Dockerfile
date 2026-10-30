@@ -4,18 +4,18 @@ FROM node:24-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY apps/admin/package.json apps/admin/package.json
-COPY apps/api/package.json apps/api/package.json
+COPY apps/frontend/package.json apps/frontend/package.json
+COPY apps/backend/package.json apps/backend/package.json
 COPY packages/db/package.json packages/db/package.json
 
 RUN npm ci
 
-COPY apps/admin ./apps/admin
-RUN npm run build -w @saas/admin
+COPY apps/frontend ./apps/frontend
+RUN npm run build -w @saas/frontend
 
 FROM nginx:1.27-alpine
 
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/apps/admin/dist /usr/share/nginx/html
+COPY --from=build /app/apps/frontend/dist /usr/share/nginx/html
 
 EXPOSE 80

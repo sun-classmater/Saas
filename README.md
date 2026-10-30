@@ -83,8 +83,8 @@ node --check server/index.js
 目标架构：**Fastify 5 + MySQL 8 + Drizzle ORM + Vue 3**。旧版 `server/`、`admin/`、`miniprogram/` 保留为回滚路径，新旧并存。
 
 ```
-apps/api        # Fastify API（新）
-apps/admin      # Vue 3 + Vite + Element Plus 管理端（新）
+apps/backend    # Fastify API（新）
+apps/frontend   # Vue 3 + Vite + Element Plus 管理端（新）
 packages/db     # Drizzle schema + MySQL SQL 迁移 + 执行器
 server/ admin/  # 旧版（SQLite，保留到迁移完成）
 ```
@@ -107,14 +107,14 @@ npm run db:import
 npm run api:dev
 
 # 5. 启动新管理端（默认 5173，代理 /api 到 8788）
-npm run dev -w @saas/admin
+npm run dev -w @saas/frontend
 ```
 
 ### 测试与验收
 
 ```powershell
 # 新架构：核心 + MySQL 集成测试（54 项）
-npm test -w @saas/api
+npm test -w @saas/backend
 
 # 新架构：77 项验收（自动创建/销毁隔离库 saas_verify，不污染演示库）
 node verify-api-http.mjs
@@ -137,9 +137,71 @@ DOMAIN=order.example.com docker compose up -d --build
 
 三个容器：`api`（Fastify，8788）、`admin`（Vue 构建产物 + Nginx）、`caddy`（HTTPS + `/api` 反代）。详见 [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)。
 
+### Spring Boot 后端（已迁完，Node 版保留为回滚）
+
+目标架构切换为 **前端 Vue + 后端 Java Spring Boot**，新后端在 [apps/backend-java](apps/backend-java)（Node 版 `apps/backend` 保留为回滚路径，两者**同端口，只能起一个**）。
+
+| 项 | 选型 |
+| --- | --- |
+| 运行时 | Java 21（JDK 需 21+） |
+| 框架 | Spring Boot 3.3.7（Web + Validation） |
+| 持久层 | MyBatis 3.0.4（SQL 与 Node 版一一对应） |
+| 数据库 | MySQL 8，沿用 `saas` 库与 26 张表（**无需迁移数据**） |
+| 密码 | 与 Node 完全兼容：scrypt(N=16384,r=8,p=1,dkLen=64)，`saltHex:hashHex` |
+| 构建 | Maven（IDEA 自带 3.9.9）；依赖仓 `/.m2repo`，产物 `/.build/backend-java` |
+
+```powershell
+npm run java:build     # 编译打包 → .build/backend-java/order-backend-0.1.0.jar
+npm run java:run       # 运行（默认 8788，可 API_PORT=8789 换端口）
+npm run java:where     # 查看自动定位到的 JDK / Maven
+```
+
+已完成端点：
+`/api/health`、`/api/health/db`、`/api/auth/login`、`/api/auth/dev-login`、`/api/auth/logout`、`/api/auth/change-password`、`/api/me`；
+`GET/POST /api/admin/customers`、`PUT /api/admin/customers/{id}`、`GET /api/admin/customers/{id}/authorizations`、`PUT /api/admin/customers/{id}/authorizations`、`GET /api/admin/customers/{id}/effective-prices`；
+`GET/POST /api/admin/products`、`PUT /api/admin/products/{id}`、`GET/PUT /api/admin/prices`、`GET/POST /api/admin/suppliers`、`PUT /api/admin/suppliers/{id}`；
+`GET /api/admin/orders`、`GET /api/admin/orders/{id}`（含明细、付款、发批次、同组子单）、`GET /api/admin/payments`；
+`POST /api/admin/orders/{id}/actions` 已支持 `BANGBANG_CONFIRM`、`SANLEI_ACCEPT`、`SHIP`（分批发货、批次上限、预付款可用额度校验）、`CANCEL`；
+`POST /api/admin/payments/mock` 模拟到账（创建支付单 + 到账回写订单已付/状态）；
+客户侧（小程序）：`GET /api/mobile/profile`、`GET /api/mobile/catalog`（车型授权 + 生效价格）、`GET/POST /api/mobile/orders`（下单：价格快照/最小包装/计划周校验/按车型分单）、`GET /api/mobile/orders/{id}`、`POST /api/mobile/orders/{id}/cancel`、`POST /api/mobile/payments`、`POST /api/mobile/payments/{id}/mock-complete`、`POST /api/mobile/shipments/{id}/receive`；
+采购计划：`GET /api/admin/plans`、`POST /api/admin/plans/{id}/actions`（两级审核）、`GET/POST /api/mobile/plans`、`PUT /api/mobile/plans/{id}`、`POST /api/mobile/plans/{id}/actions`（提交/撤回）；
+库存：`GET /api/admin/inventory`、`GET /api/admin/inventory/movements`、`POST /api/admin/inventory/transfer`（移库）、`POST /api/admin/inventory/{id}/adjust`（手工调整）；
+缺货分配：`GET /api/admin/shortages`、`GET /api/admin/shortages/{id}/preview`（预付款优先 + 六维加权，按最小包装取整后按余量二次分配）、`POST /api/admin/shortages/{id}/apply`；
+财务：`GET /api/admin/finance`、`POST /api/admin/finance/invoices`、`POST /invoices/{id}/status`、`POST /finance/freight`、`POST /finance/adjustments`、`POST /finance/{kind}/{id}/settle`；
+售后：`GET /api/admin/after-sales`、`PUT /api/admin/after-sales/{id}`、`GET/POST /api/mobile/after-sales`；
+站内通知：`GET /api/notifications`、`POST /api/notifications/{id}/read`；
+账号与审计：`GET /api/admin/users`、`POST /api/admin/users/customer`、`POST /users/staff`、`POST /users/{id}/toggle`、`GET /api/admin/audit-logs`（仅 `SUPER_ADMIN`）；
+导出与模板：`GET /api/admin/exports/{orders|inventory|payments|plans}`（CSV）、`/exports/{kind}/xlsx`、`GET /api/admin/import-templates/{customers|products|prices|inventory}`（CSV/XLSX）——XLSX 用 Apache POI 生成；
+导入：`POST /api/admin/imports/{kind}`（CSV）、`POST /api/admin/imports/{kind}/xlsx`（base64），5000 行上限、整批事务回滚、行号级错误；
+微信回调：`POST /api/wechat/pay/notify`（mock 模式与 Node 一致返回 503；**正式模式验签尚未迁移**，会返回 501 明确报错）。
+
+**双后端对照验证**：`node scripts/java-parity.mjs <javaBase> <nodeBase>` 会在同一份数据下逐端点比对 Java 与 Node 的 JSON（数值按 1e-6 容差），并在 Java 端跑创建/修改冒烟后自动清理测试数据。当前结果：客户/产品/供应商/价格/收款/订单列表/订单详情 8 类只读端点完全一致，7 项写入冒烟与权限边界全部通过。
+
+**订单动作差分测试**：`node scripts/java-actions-test.mjs` 会建一个 `saas_java_verify` 独立库、导入演示数据、同时起 Java(8790) 与 Node(8791)，用 Node 下两两相同的订单，把同样的 confirm / accept / cancel / ship / mock-pay 分别打两个后端，逐字段比对结果后删库杀进程——既不污染演示数据，也能覆盖状态机、库存预占与到账回写。
+
+**迁移状态：75/75 端点已覆盖，契约验收 77/77 通过。**
+
+```powershell
+# 用 Java 后端跑 Node 那套 77 项契约验收（独立库，自动建/删）
+node scripts/verify-java-contract.mjs
+
+# 端点清单对照（Node 路由 vs Java 映射）
+node scripts/endpoint-inventory.mjs
+
+# 双后端逐端点 JSON 对照（需先自行起 Java:8788 与 Node:8789）
+node scripts/java-parity.mjs http://127.0.0.1:8788 http://127.0.0.1:8789
+
+# 订单/财务等写入链路差分测试（自建库、自己起两端、跑完删库）
+node scripts/java-actions-test.mjs
+```
+
+已知差异（有意保留）：
+- 微信支付回调**正式模式**的验签尚未迁移，配置了证书时返回 `501 WECHAT_NOTIFY_NOT_READY`（mock 模式与 Node 一致返回 503）；需要真实商户证书才能补。
+- 目录穿越路径 Node 返回 404、Spring Boot 的 Tomcat 在应用层之前返回 400，两者都不返回文件，契约脚本同时接受 400/403/404。
+
 ### 当前进度
 
-- 已完成：MySQL 26 表结构、SQLite 数据迁移与校验、全部后端接口（含导入导出、微信回调）、Vue 管理端 15/15 页、Docker/Caddy 新架构编排。
+- 已完成：MySQL 26 表结构、SQLite 数据迁移与校验、全部后端接口（含导入导出、微信回调、站内消息、审计日志）、Vue 管理端 16/16 页（含审计日志页、右上角改密与消息中心）、Docker/Caddy 新架构编排。
 - 验收：新 API **77/77**、新测试 **54/54**、旧单元测试 **12/12**。
 - 待完成：在真实环境构建管理端并做浏览器验收、切换 DNS/反代、旧版下线。
 

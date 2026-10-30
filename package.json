@@ -13,11 +13,19 @@
     "start": "node server/index.js",
     "test": "node --test",
     "check": "node --check server/index.js && node --check server/database.js && node --check server/routes.js && node --check server/business.js && node --check server/operations.js && node --check server/wechat.js && node --check server/xlsx.js && node --check admin/app.js && node --check miniprogram/app.js",
-    "api:dev": "npm run dev -w @saas/api",
-    "api:start": "npm run start -w @saas/api",
+    "api:dev": "npm run dev -w @saas/backend",
+    "api:start": "npm run start -w @saas/backend",
     "db:migrate": "npm run migrate -w @saas/db",
     "db:seed": "npm run seed -w @saas/db",
-    "db:import": "node scripts/migrate-sqlite-to-mysql.mjs"
+    "db:import": "node scripts/migrate-sqlite-to-mysql.mjs",
+    "snap": "node scripts/snapshot.mjs create",
+    "snap:list": "node scripts/snapshot.mjs list",
+    "snap:restore": "node scripts/snapshot.mjs restore",
+    "snap:clean": "node scripts/snapshot.mjs clean",
+    "doctor": "node scripts/doctor.mjs",
+    "java:build": "node scripts/java-backend.mjs build",
+    "java:run": "node scripts/java-backend.mjs run",
+    "java:where": "node scripts/java-backend.mjs where"
   },
   "engines": {
     "node": ">=24.0"

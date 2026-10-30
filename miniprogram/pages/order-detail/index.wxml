@@ -69,6 +69,7 @@
 
     <view class="action-panel">
       <button wx:if="{{order.settlementMethod === 'PREPAY' && (order.status === 'PENDING_PAYMENT' || order.status === 'PARTIALLY_PAID')}}" class="btn btn-primary action-main" loading="{{paying}}" bindtap="pay">支付预付款</button>
+      <button wx:if="{{order.settlementMethod === 'PREPAY' && order.status === 'PARTIALLY_SHIPPED'}}" class="btn btn-primary action-main" loading="{{paying}}" bindtap="pay">支付尾款</button>
       <button wx:if="{{order.status === 'PENDING_BANGBANG' || order.status === 'PENDING_PAYMENT' || order.status === 'PARTIALLY_PAID'}}" class="btn btn-danger action-side" bindtap="cancelOrder">取消订单</button>
       <button wx:if="{{order.status === 'COMPLETED'}}" class="btn btn-ghost action-side" bindtap="openAfterSales">申请售后</button>
     </view>

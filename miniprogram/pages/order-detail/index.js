@@ -62,7 +62,7 @@ Page({
   },
 
   canPay() {
-    return this.data.order?.settlementMethod === "PREPAY" && ["PENDING_PAYMENT", "PARTIALLY_PAID"].includes(this.data.order.status);
+    return this.data.order?.settlementMethod === "PREPAY" && ["PENDING_PAYMENT", "PARTIALLY_PAID", "PARTIALLY_SHIPPED"].includes(this.data.order.status);
   },
 
   async pay() {

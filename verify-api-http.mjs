@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import mysql from "mysql2/promise";
 import { importSqliteToMysql } from "./scripts/lib/import-sqlite.mjs";
-import { writeWorkbookRows } from "./apps/api/src/lib/xlsx.js";
+import { writeWorkbookRows } from "./apps/backend/src/lib/xlsx.js";
 
 const repoRoot = path.resolve(import.meta.dirname);
 const envPath = path.join(repoRoot, ".env");
@@ -32,27 +32,35 @@ const verifyDbName = process.env.VERIFY_DB || `${baseConfig.database}_verify`;
 const verifyUrl = new URL(process.env.DATABASE_URL);
 verifyUrl.pathname = `/${verifyDbName}`;
 
-const adminConn = await mysql.createConnection({ ...baseConfig, multipleStatements: true });
-await adminConn.query(`DROP DATABASE IF EXISTS \`${verifyDbName}\``);
-await adminConn.query(
-  `CREATE DATABASE \`${verifyDbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci`
-);
-await adminConn.query(`USE \`${verifyDbName}\``);
-await adminConn.query(fs.readFileSync(path.join(repoRoot, "packages/db/sql/001_init.sql"), "utf8"));
-await adminConn.end();
+// VERIFY_SKIP_DB_SETUP=1 时复用外部已准备好的库（用于对接 Java 后端）
+if (!process.env.VERIFY_SKIP_DB_SETUP) {
+  const adminConn = await mysql.createConnection({ ...baseConfig, multipleStatements: true });
+  await adminConn.query(`DROP DATABASE IF EXISTS \`${verifyDbName}\``);
+  await adminConn.query(
+    `CREATE DATABASE \`${verifyDbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci`
+  );
+  await adminConn.query(`USE \`${verifyDbName}\``);
+  await adminConn.query(fs.readFileSync(path.join(repoRoot, "packages/db/sql/001_init.sql"), "utf8"));
+  await adminConn.end();
 
-await importSqliteToMysql({
-  sourcePath: path.join(repoRoot, process.env.SQLITE_PATH || "data/order-system.db"),
-  databaseUrl: verifyUrl.toString(),
-  force: true,
-  logger: { log() {} }
-});
+  await importSqliteToMysql({
+    sourcePath: path.join(repoRoot, process.env.SQLITE_PATH || "data/order-system.db"),
+    databaseUrl: verifyUrl.toString(),
+    force: true,
+    logger: { log() {} }
+  });
+}
 
-process.env.DATABASE_URL = verifyUrl.toString();
-const { buildApp } = await import("./apps/api/src/server.js");
-const app = await buildApp({ logger: false });
-await app.listen({ port: 0, host: "127.0.0.1" });
-const base = `http://127.0.0.1:${app.server.address().port}`;
+// VERIFY_BASE_URL 指向已有服务（例如 Spring Boot）时，不再在进程内启动 Fastify
+let app = null;
+let base = process.env.VERIFY_BASE_URL;
+if (!base) {
+  process.env.DATABASE_URL = verifyUrl.toString();
+  const { buildApp } = await import("./apps/backend/src/server.js");
+  app = await buildApp({ logger: false });
+  await app.listen({ port: 0, host: "127.0.0.1" });
+  base = `http://127.0.0.1:${app.server.address().port}`;
+}
 
 const pool = mysql.createPool({
   ...parseDatabaseUrl(verifyUrl.toString()),
@@ -154,13 +162,15 @@ await step("管理端入口与 API 健康检查可访问", async () => {
   const health = await get("/api/health");
   eq(health.status, 200, "API 健康检查");
   eq(health.data.data.database, "mysql", "数据库类型");
-  ok(fs.existsSync(path.join(repoRoot, "apps/admin/index.html")), "新管理端入口存在");
-  ok(fs.existsSync(path.join(repoRoot, "apps/admin/vite.config.js")), "Vite 配置存在");
+  ok(fs.existsSync(path.join(repoRoot, "apps/frontend/index.html")), "新管理端入口存在");
+  ok(fs.existsSync(path.join(repoRoot, "apps/frontend/vite.config.js")), "Vite 配置存在");
   ok(fs.existsSync(path.join(repoRoot, "admin/index.html")), "旧版管理端保留（回滚用）");
 });
 await step("静态目录穿越被拒绝", async () => {
   const result = await get("/..%2fserver%2froutes.js");
-  ok([403, 404].includes(result.status), `预期 403/404，实际 ${result.status}`);
+  // Node 走应用层返回 404；Spring Boot 的 Tomcat 在应用层之前就以 400 拒绝。
+  // 两者都属于「拒绝且不返回文件」，因此这里接受 400/403/404。
+  ok([400, 403, 404].includes(result.status), `预期 400/403/404，实际 ${result.status}`);
 });
 await step("OPTIONS 预检返回 204 且带 CORS 头", async () => {
   const result = await call("OPTIONS", "/api/health");
@@ -368,10 +378,19 @@ await step("预付款订单：部分付款→补足→接单→分批发货→�
   });
   eq(ship2.status, 409, "剩余批次超过预付款上限被阻止");
   eq(ship2.data.error.code, "SHIPMENT_EXCEEDS_PREPAYMENT", "超预付错误码");
-  const topUp = await post("/api/mobile/payments", tokens["13800000002"], { orderId, amount: 576 });
-  eq(topUp.status, 409, "分批发货后补款被阻止");
-  eq(topUp.data.error.code, "INVALID_ORDER_STATUS", "补款错误码");
-  gap("预付款订单分批发货后无法补款：付款仅允许 PENDING_PAYMENT/PARTIALLY_PAID，而部分发货后状态为 PARTIALLY_SHIPPED，导致剩余批次无法发货且客户无法补足尾款（订单卡死）。允许超付的客户可绕过。");
+  const detailAfterShip = await get(`/api/admin/orders/${orderId}`, tokens.sanlei);
+  const outstanding = Number(detailAfterShip.data.data.totalAmount) - Number(detailAfterShip.data.data.paidAmount);
+  const topUp = await post("/api/mobile/payments", tokens["13800000002"], { orderId, amount: outstanding });
+  eq(topUp.status, 201, "分批发货后可补尾款");
+  const topUpDone = await post(`/api/mobile/payments/${topUp.data.data.id}/mock-complete`, tokens["13800000002"], {});
+  eq(topUpDone.status, 200, "补款到账");
+  eq(topUpDone.data.data.status, "PARTIALLY_SHIPPED", "补款后状态保持部分发货");
+  const ship2AfterTopUp = await post(`/api/admin/orders/${orderId}/actions`, tokens.warehouse, {
+    action: "SHIP",
+    shipment: { logisticsCompany: "德邦", trackingNo: "DB-QA-003", items: [{ orderItemId: itemId, quantity: 6 }] }
+  });
+  eq(ship2AfterTopUp.status, 200, "补款后剩余批次放行");
+  eq(ship2AfterTopUp.data.data.status, "SHIPPED", "全部发完");
 });
 await step("订单取消释放预占库存", async () => {
   const created = await post("/api/mobile/orders", tokens["13800000003"], {
@@ -988,6 +1007,6 @@ if (gaps.length) {
   console.log("\n业务缺口：");
   for (const note of gaps) console.log(` - ${note}`);
 }
-await app.close();
+if (app) await app.close();
 await dropVerifyDb();
 process.exitCode = failed.length ? 1 : 0;

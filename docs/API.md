@@ -16,13 +16,15 @@
 | GET/POST | `/api/mobile/orders` | 客户订单列表 / 提交订单 |
 | GET | `/api/mobile/orders/:id` | 主子单、付款、发货批次及物流 |
 | POST | `/api/mobile/orders/:id/cancel` | 取消未付款订单并释放预占 |
-| POST | `/api/mobile/payments` | 创建微信预支付 |
+| POST | `/api/mobile/payments` | 创建微信预支付（待付款、部分付款、部分发货状态均可补款） |
 | POST | `/api/mobile/payments/:id/mock-complete` | 测试模式模拟到账 |
 | POST | `/api/mobile/shipments/:id/receive` | 按批次确认收货 |
 | GET/POST | `/api/mobile/plans` | 采购计划列表 / 新建计划 |
 | PUT | `/api/mobile/plans/:id` | 修改草稿或退回计划 |
 | POST | `/api/mobile/plans/:id/actions` | 提交或撤回计划 |
 | GET/POST | `/api/mobile/after-sales` | 售后记录 / 新建售后 |
+| GET | `/api/notifications` | 当前账号站内消息（最近 100 条） |
+| POST | `/api/notifications/:id/read` | 标记单条消息已读 |
 
 ## 内部管理
 
@@ -31,6 +33,7 @@
 - 订单动作包括 `BANGBANG_CONFIRM`、`SANLEI_ACCEPT`、`SHIP`、`CANCEL`。
 - `/api/admin/exports/:kind/xlsx` 导出标准 Excel；`/api/admin/imports/:kind/xlsx` 导入 Excel。
 - `/api/admin/shortages/:productId/preview` 返回加权公平分配预览；`/apply` 确认并更新库存预占。
+- `/api/admin/audit-logs` 返回最近 500 条审计记录，仅 `SUPER_ADMIN` 可读。
 
 ## 微信支付回调
 

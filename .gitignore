@@ -12,5 +12,9 @@ node_modules/
 miniprogram/project.private.config.json
 coverage/
 dist/
+.verify-admin-dist/
+_snapshots/
+.m2repo/
+.build/
 *.xlsx
 新建 文本文档.txt
